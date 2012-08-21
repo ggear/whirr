@@ -853,11 +853,11 @@ public class ClusterSpec {
   public String getAutoHostnamePrefix() {
     return autoHostnamePrefix;
   }
-    
+
   public void setAutoHostnamePrefix(String autoHostnamePrefix) {
     this.autoHostnamePrefix = autoHostnamePrefix;
   }
-  
+
   public String getJdkInstallUrl() {
     return jdkInstallUrl;
   }
