@@ -185,6 +185,8 @@ public class ClusterSpec {
     AUTO_HOSTNAME_SUFFIX(String.class, false, "If given, use this (along with AUTO_HOSTNAME_PREFIX, if set) to set " +
                              "the hostname for the instances."),
 
+    JDK_INSTALL_URL(String.class, false, "JDK install URL"),
+                             
     AWS_EC2_PLACEMENT_GROUP(String.class, false, "If given, use this existing EC2 placement group. (aws-ec2 specific option)");
     
     private Class<?> type;
@@ -306,7 +308,9 @@ public class ClusterSpec {
   private String autoHostnamePrefix;
 
   private String autoHostnameSuffix;
-    
+  
+  private String jdkInstallUrl;
+  
   private Configuration config;
   
   public ClusterSpec() throws ConfigurationException {
@@ -340,6 +344,8 @@ public class ClusterSpec {
     setAutoHostnamePrefix(getString(Property.AUTO_HOSTNAME_PREFIX));
     setAutoHostnameSuffix(getString(Property.AUTO_HOSTNAME_SUFFIX));
 
+    setJdkInstallUrl(getString(Property.JDK_INSTALL_URL));
+    
     setProvider(getString(Property.PROVIDER));
     setEndpoint(getString(Property.ENDPOINT));
     setIdentity(getString(Property.IDENTITY));
@@ -470,6 +476,8 @@ public class ClusterSpec {
     r.setAutoHostnamePrefix(getAutoHostnamePrefix());
     r.setAutoHostnameSuffix(getAutoHostnameSuffix());
 
+    r.setJdkInstallUrl(getJdkInstallUrl());
+    
     return r;
   }
 
@@ -841,7 +849,7 @@ public class ClusterSpec {
   public void setAutoHostnameSuffix(String autoHostnameSuffix) {
     this.autoHostnameSuffix = autoHostnameSuffix;
   }
-
+  
   public String getAutoHostnamePrefix() {
     return autoHostnamePrefix;
   }
@@ -849,8 +857,16 @@ public class ClusterSpec {
   public void setAutoHostnamePrefix(String autoHostnamePrefix) {
     this.autoHostnamePrefix = autoHostnamePrefix;
   }
+  
+  public String getJdkInstallUrl() {
+    return jdkInstallUrl;
+  }
 
-  /**
+  public void setJdkInstallUrl(String jdkInstallUrl) {
+    this.jdkInstallUrl = jdkInstallUrl;
+  }
+
+/**
    * The rsa public key which is authorized to login to your on the cloud nodes.
    * 
    * @param publicKey
@@ -1002,6 +1018,7 @@ public class ClusterSpec {
         && Objects.equal(getAwsEc2PlacementGroup(), that.getAwsEc2PlacementGroup())
         && Objects.equal(getAutoHostnamePrefix(), that.getAutoHostnamePrefix())
         && Objects.equal(getAutoHostnameSuffix(), that.getAutoHostnameSuffix())
+        && Objects.equal(getJdkInstallUrl(), that.getJdkInstallUrl())
         ;
     }
     return false;
@@ -1036,7 +1053,8 @@ public class ClusterSpec {
         getAwsEc2SpotPrice(),
         getAwsEc2PlacementGroup(),
         getAutoHostnamePrefix(),
-        getAutoHostnameSuffix()
+        getAutoHostnameSuffix(),
+        getJdkInstallUrl()
     );
   }
   
@@ -1071,6 +1089,7 @@ public class ClusterSpec {
       .add("awsEc2PlacementGroup",getAwsEc2PlacementGroup())
       .add("autoHostnamePrefix",getAutoHostnamePrefix())
       .add("autoHostnameSuffix",getAutoHostnameSuffix())
+      .add("jdkInstallUrl", getJdkInstallUrl())
       .toString();
   }
 }
