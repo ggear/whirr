@@ -40,4 +40,12 @@ function configure_hostnames() {
       sleep 2
       hostname
   fi
+  
+  # HACK: hijack this to kill the firewalls until WHIRR-276 is resolved
+  service iptables stop
+  service ip6tables stop
+  chkconfig --level 0123456 iptables off
+  chkconfig --level 0123456 ip6tables off
+  # HACK: end
+  
 }
