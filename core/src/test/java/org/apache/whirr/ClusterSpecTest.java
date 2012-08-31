@@ -79,12 +79,25 @@ public class ClusterSpecTest {
     assertEquals(spec.getAwsEc2SpotPrice(), new Float(0.3));
   }
   
+  /**
+   * @see ConfigToTemplateBuilderSpecTest for more
+   */
   @Test
-  public void testTemplate() throws ConfigurationException {
+  public void testTemplateOverrides() throws ConfigurationException {
     Configuration conf = new PropertiesConfiguration();
     conf.setProperty(ClusterSpec.Property.TEMPLATE.getConfigName(), "osFamily=UBUNTU,os64Bit=true,minRam=2048");
     ClusterSpec spec = ClusterSpec.withNoDefaults(conf);
     assertEquals(spec.getTemplate(), TemplateBuilderSpec.parse("osFamily=UBUNTU,os64Bit=true,minRam=2048"));
+  }
+  
+  /**
+   * @see ConfigToTemplateBuilderSpecTest for more
+   */
+  @Test
+  public void testNoTemplateSetsUbuntu1004With1GB() throws ConfigurationException {
+    Configuration conf = new PropertiesConfiguration();
+    ClusterSpec spec = ClusterSpec.withNoDefaults(conf);
+    assertEquals(spec.getTemplate(), TemplateBuilderSpec.parse("osFamily=UBUNTU,osVersionMatches=10.04,minRam=1024"));
   }
   
   @Test
@@ -347,7 +360,21 @@ public class ClusterSpecTest {
       assertEquals(null, ec2Spec.getAutoHostnamePrefix());
       assertEquals(null, ec2Spec.getAutoHostnameSuffix());
   }
-      
+
+  @Test
+  public void testJdkInstallUrl() throws Exception {
+      Configuration cloudServersConfig = new PropertiesConfiguration();
+
+      ClusterSpec cloudServersSpec = ClusterSpec.withTemporaryKeys(cloudServersConfig);
+      assertEquals(null, cloudServersSpec.getJdkInstallUrl());
+
+      cloudServersConfig = new PropertiesConfiguration();
+      cloudServersConfig.addProperty("whirr.jdk-install-url", "http://whirr-third-party.s3.amazonaws.com/jdk-6u21-linux-i586-rpm.bin");
+
+      cloudServersSpec = ClusterSpec.withTemporaryKeys(cloudServersConfig);
+      assertEquals("http://whirr-third-party.s3.amazonaws.com/jdk-6u21-linux-i586-rpm.bin", cloudServersSpec.getJdkInstallUrl());
+  }  
+  
 
   @Test
   public void testApplySubroleAliases() throws ConfigurationException {
