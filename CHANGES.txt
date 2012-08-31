@@ -2,6 +2,20 @@ Apache Whirr Change Log
 
 Trunk (unreleased changes)
 
+  NEW FEATURES
+
+  IMPROVEMENTS
+
+    WHIRR-638. Parameterize OAB Java install. (Graham Gear via abayer)
+  
+  BUG FIXES
+
+    WHIRR-641. Improved parsing of config ->
+    TemplateBuilderSpec. (Adrian Cole via abayer)
+
+    WHIRR-645. Race condition between collocated namenode and
+    jobtracker services. (Graham Gear via abayer)
+
 Release 0.8.0 - 2012-08-17
 
   NEW FEATURES
@@ -122,6 +136,15 @@ Release 0.8.0 - 2012-08-17
     WHIRR-633. Align jclouds 1.5.0 modularity changes with Whirr (iocanel via adriancole)
 
   BUG FIXES
+
+    WHIRR-635. Ensure hostname update as required by
+    AUTO_HOSTNAME_SUFFIX is consistent for RHEL derivatives (Graham
+    Gear via abayer)
+  
+    WHIRR-640. Ensure minRam is set for CDH recipes and test
+    properties. (abayer)
+
+    WHIRR-639. Set ownership of CDH Hadoop data dir to Hadoop group. (abayer)
 
     WHIRR-632. CDH4 only available on 64 bit. (abayer)
   
