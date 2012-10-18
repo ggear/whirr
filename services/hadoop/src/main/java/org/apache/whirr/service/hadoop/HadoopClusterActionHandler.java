@@ -100,6 +100,8 @@ public abstract class HadoopClusterActionHandler extends ClusterActionHandlerSup
     
     doBeforeConfigure(event);
 
+    handleFirewallRules(event);
+    
     createHadoopConfigFiles(event, clusterSpec, cluster);
 
     addStatement(event, call("retry_helpers"));
@@ -115,7 +117,13 @@ public abstract class HadoopClusterActionHandler extends ClusterActionHandlerSup
   private void createHadoopConfigFiles(ClusterActionEvent event,
       ClusterSpec clusterSpec, Cluster cluster) throws IOException {
     Map<String, String> deviceMappings = getDeviceMappings(event);
+
+    //Velocity is assuming flat classloaders or TCCL to load templates.
+    //This doesn't work in OSGi unless we set the TCCL to the bundle classloader before invocation
+    ClassLoader oldTccl = Thread.currentThread().getContextClassLoader();
     try {
+      Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+
       event.getStatementBuilder().addStatements(
         buildCommon("/tmp/core-site.xml", clusterSpec, cluster),
         buildHdfs("/tmp/hdfs-site.xml", clusterSpec, cluster, deviceMappings.keySet()),
@@ -126,6 +134,8 @@ public abstract class HadoopClusterActionHandler extends ClusterActionHandlerSup
       
     } catch (ConfigurationException e) {
       throw new IOException(e);
+    }  finally {
+      Thread.currentThread().setContextClassLoader(oldTccl);
     }
     String devMappings = VolumeManager.asString(deviceMappings);
     addStatement(event, call("prepare_all_disks", "'" + devMappings + "'"));
