@@ -21,22 +21,21 @@ package org.apache.whirr;
 import static org.apache.whirr.RolePredicates.withIds;
 import static org.jclouds.compute.options.RunScriptOptions.Builder.overrideLoginCredentials;
 
-import com.google.common.annotations.Beta;
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Sets;
+import java.io.IOException;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
+
+import org.apache.whirr.Cluster.Instance;
 import org.apache.whirr.actions.BootstrapClusterAction;
 import org.apache.whirr.actions.CleanupClusterAction;
 import org.apache.whirr.actions.ConfigureServicesAction;
 import org.apache.whirr.actions.DestroyClusterAction;
 import org.apache.whirr.actions.StartServicesAction;
 import org.apache.whirr.actions.StopServicesAction;
+import org.apache.whirr.service.ComputeCache;
 import org.apache.whirr.state.ClusterStateStore;
 import org.apache.whirr.state.ClusterStateStoreFactory;
-import org.apache.whirr.service.ComputeCache;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.compute.RunScriptOnNodesException;
@@ -50,10 +49,13 @@ import org.jclouds.scriptbuilder.domain.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import com.google.common.annotations.Beta;
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
 
 
 /**
@@ -109,8 +111,32 @@ public class ClusterController {
    */
   public Cluster launchCluster(ClusterSpec clusterSpec)
     throws IOException, InterruptedException {
+    return launchCluster(clusterSpec, false);
+  }
+
+  /**
+   * Start the cluster described by <code>clusterSpec</code> and block until the
+   * cluster is available. It is not guaranteed that the service running on the
+   * cluster has started when this method returns.
+   *
+   * @param clusterSpec
+   * @param cachePublicHostNameBasedOnMetaData
+   *          switch to turn on eager pre-cache of public host name ahead of
+   *          configure phase, based on post bootstrap meta-data
+   * @return an object representing the running cluster
+   * @throws IOException
+   *           if there is a problem while starting the cluster. The cluster may
+   *           or may not have started.
+   * @throws InterruptedException
+   *           if the thread is interrupted.
+   */
+  public Cluster launchCluster(ClusterSpec clusterSpec, boolean cachePublicHostNameBasedOnMetaData)
+      throws IOException, InterruptedException {
     try {
       Cluster cluster = bootstrapCluster(clusterSpec);
+      if (cachePublicHostNameBasedOnMetaData)
+        for (Instance instance : cluster.getInstances())
+          instance.cachePublicHostNameBasedOnMetaData();
       cluster = configureServices(clusterSpec, cluster);
       return startServices(clusterSpec, cluster);
 

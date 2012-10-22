@@ -70,7 +70,7 @@ public abstract class BaseServiceDryRunTest {
     ClusterController controller = new ClusterController();
     DryRun dryRun = controller.getCompute().apply(clusterSpec).utils().injector().getInstance(DryRun.class);
     dryRun.reset();
-    controller.launchCluster(clusterSpec);
+    controller.launchCluster(clusterSpec, true);
     return dryRun;
   }
 

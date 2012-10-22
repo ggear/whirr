@@ -115,6 +115,11 @@ public class Cluster {
       return publicIp;
     }
 
+    public synchronized void cachePublicHostNameBasedOnMetaData() {
+      LOG.debug("caching public host name as {} as per pre-launch meta data", nodeMetadata.getHostname());
+      publicHostName = nodeMetadata.getHostname();
+    }
+
     public synchronized String getPublicHostName() throws IOException {
       if (publicHostName == null) {
         LOG.debug("resolving public hostname of {} (public {}, private {})", new Object[] { this, publicIp, privateIp });
