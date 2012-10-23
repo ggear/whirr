@@ -18,9 +18,10 @@
 set -x
 
 function configure_kerberos_server() {
+  KERBEROS_REALM_REGEX=$(echo $KERBEROS_REALM | sed s/\\\./\\\\\./g)
   service krb5kdc stop
   service kadmin stop
-  sed -i -e "s/EXAMPLE\.COM/CDHCLUSTER\.COM/" /var/kerberos/krb5kdc/kdc.conf
+  sed -i -e "s/EXAMPLE\.COM/$KERBEROS_REALM_REGEX/" /var/kerberos/krb5kdc/kdc.conf
   yum install -y expect
   cat >> run_kdb5_util <<END
 #!/usr/bin/expect -f
@@ -33,21 +34,22 @@ END
   chmod +x run_kdb5_util
   ./run_kdb5_util
   rm -rf run_kdb5_util
-  sed -i -e "s/EXAMPLE\.COM/CDHCLUSTER\.COM/" /var/kerberos/krb5kdc/kadm5.acl
+  sed -i -e "s/EXAMPLE\.COM/$KERBEROS_REALM_REGEX/" /var/kerberos/krb5kdc/kadm5.acl
   cat >> run_addpinc <<END
 #!/usr/bin/expect -f
 set timeout 5000
 set principal_primary [lindex \$argv 0]
 set principal_instance [lindex \$argv 1]
-spawn sudo kadmin.local -q "addprinc \$principal_primary\$principal_instance@CDHCLUSTER.COM"
+set realm [lindex \$argv 2]
+spawn sudo kadmin.local -q "addprinc $principal_instance\@$realm"
 expect -re {Enter password for principal .*} { send "\$principal_primary\r" }
 expect -re {Re-enter password for principal .* } { send "\$principal_primary\r" }
 expect EOF
 END
   chmod +x run_addpinc
-  ./run_addpinc whirr /admin
-  ./run_addpinc hdfs
-  ./run_addpinc cdhuser
+  ./run_addpinc whirr whirr/admin $KERBEROS_REALM
+  ./run_addpinc hdfs hdfs $KERBEROS_REALM
+  ./run_addpinc cdhuser cdhuser $KERBEROS_REALM
   rm -rf ./run_addpinc
   service krb5kdc start
   service kadmin start

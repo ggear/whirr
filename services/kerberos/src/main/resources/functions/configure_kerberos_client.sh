@@ -28,7 +28,8 @@ function configure_kerberos_client() {
       ;;
     esac
   done
+  KERBEROS_REALM_REGEX=$(echo $KERBEROS_REALM | sed s/\\\./\\\\\./g)
   sed -i -e "s/kerberos\.example\.com/$KERBEROS_SERVER_HOST/" /etc/krb5.conf
   sed -i -e "s/example\.com/$KERBEROS_SERVER_HOST/" /etc/krb5.conf
-  sed -i -e "s/EXAMPLE\.COM/CDHCLUSTER\.COM/" /etc/krb5.conf
+  sed -i -e "s/EXAMPLE\.COM/$KERBEROS_REALM_REGEX/" /etc/krb5.conf
 }
