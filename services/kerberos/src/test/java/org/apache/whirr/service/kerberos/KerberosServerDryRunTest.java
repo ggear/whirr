@@ -31,29 +31,30 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
-public class KerberosClientDryRunTest extends BaseServiceDryRunTest {
+public class KerberosServerDryRunTest extends BaseServiceDryRunTest {
 
   @Override
   protected Set<String> getInstanceRoles() {
-    return ImmutableSet.of(KerberosServerHandler.ROLE + "+" + KerberosClientHandler.ROLE);
+    return ImmutableSet.of(KerberosServerHandler.ROLE);
   }
 
   @Override
   protected Predicate<CharSequence> bootstrapPredicate() {
     return and(containsPattern("configure_hostnames"),
-      and(containsPattern("java"), containsPattern("install_kerberos_client")));
+      and(containsPattern("java"), containsPattern("install_kerberos_server")));
   }
 
   @Override
   protected Predicate<CharSequence> configurePredicate() {
-    return containsPattern("configure_kerberos_client");
+    return containsPattern("configure_kerberos_server");
   }
 
   @Test
-  public void testNoServer() throws Exception {
+  public void testKerberosRealm() throws Exception {
     DryRun dryRun = launchWithClusterSpec(newClusterSpecForProperties(ImmutableMap.of("whirr.instance-templates", "1 "
-      + KerberosClientHandler.ROLE)));
+      + KerberosServerHandler.ROLE)));
     assertScriptPredicateOnPhase(dryRun, "bootstrap", bootstrapPredicate());
+    assertScriptPredicateOnPhase(dryRun, "configure", configurePredicate());
   }
-  
+
 }
