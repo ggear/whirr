@@ -33,5 +33,4 @@ function install_kerberos_client() {
 	    mv jce/*.jar /usr/java/default/jre/lib/security
     fi
   fi
-  sudo useradd -u 2000 cdhuser
 }

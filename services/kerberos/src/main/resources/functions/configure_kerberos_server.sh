@@ -47,9 +47,9 @@ expect -re {Re-enter password for principal .* } { send "\$principal_primary\r" 
 expect EOF
 END
   chmod +x run_addpinc
-  ./run_addpinc whirr whirr/admin $KERBEROS_REALM
+  ./run_addpinc $CLUSTER_USER $CLUSTER_USER/admin $KERBEROS_REALM
+  ./run_addpinc $CLUSTER_USER $CLUSTER_USER $KERBEROS_REALM
   ./run_addpinc hdfs hdfs $KERBEROS_REALM
-  ./run_addpinc cdhuser cdhuser $KERBEROS_REALM
   rm -rf ./run_addpinc
   service krb5kdc start
   service kadmin start
