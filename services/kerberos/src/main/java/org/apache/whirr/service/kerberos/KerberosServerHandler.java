@@ -17,15 +17,19 @@
  */
 package org.apache.whirr.service.kerberos;
 
+import static org.apache.whirr.RolePredicates.role;
 import static org.jclouds.scriptbuilder.domain.Statements.call;
 
 import java.io.IOException;
 
 import org.apache.whirr.service.ClusterActionEvent;
+import org.apache.whirr.service.FirewallManager.Rule;
 
 public class KerberosServerHandler extends KerberosBaseHandler {
 
   public static final String ROLE = "kerberosserver";
+
+  private static final String PROPERTY_PORTS = "kerberosserver.ports";
 
   @Override
   public String getRole() {
@@ -42,6 +46,11 @@ public class KerberosServerHandler extends KerberosBaseHandler {
   protected void beforeConfigure(ClusterActionEvent event) throws IOException {
     super.beforeConfigure(event);
     addStatement(event, call("configure_kerberos_server"));
+    for (Object port : getConfiguration(event.getClusterSpec()).getList(PROPERTY_PORTS)) {
+      if (port != null && !"".equals(port))
+        event.getFirewallManager().addRule(
+          Rule.create().destination(role(ROLE)).port(Integer.parseInt(port.toString())));
+    }
   }
 
 }
