@@ -41,7 +41,7 @@ set timeout 5000
 set principal_primary [lindex \$argv 0]
 set principal_instance [lindex \$argv 1]
 set realm [lindex \$argv 2]
-spawn sudo kadmin.local -q "addprinc $principal_instance\@$realm"
+spawn sudo kadmin.local -q "addprinc \$principal_instance@\$realm"
 expect -re {Enter password for principal .*} { send "\$principal_primary\r" }
 expect -re {Re-enter password for principal .* } { send "\$principal_primary\r" }
 expect EOF
