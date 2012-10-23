@@ -24,8 +24,11 @@ import static com.google.common.base.Predicates.containsPattern;
 import java.util.Set;
 
 import org.apache.whirr.service.BaseServiceDryRunTest;
+import org.apache.whirr.service.DryRunModule.DryRun;
+import org.junit.Test;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
 public class KerberosClientDryRunTest extends BaseServiceDryRunTest {
@@ -37,7 +40,8 @@ public class KerberosClientDryRunTest extends BaseServiceDryRunTest {
 
   @Override
   protected Predicate<CharSequence> bootstrapPredicate() {
-    return and(containsPattern("configure_hostnames"), and(containsPattern("java"), containsPattern("install_kerberos_client")));
+    return and(containsPattern("configure_hostnames"),
+      and(containsPattern("java"), containsPattern("install_kerberos_client")));
   }
 
   @Override
@@ -45,4 +49,11 @@ public class KerberosClientDryRunTest extends BaseServiceDryRunTest {
     return containsPattern("configure_kerberos_client");
   }
 
+  @Test
+  public void testNoServer() throws Exception {
+    DryRun dryRun = launchWithClusterSpec(newClusterSpecForProperties(ImmutableMap.of("whirr.instance-templates", "1 "
+      + KerberosClientHandler.ROLE)));
+    assertScriptPredicateOnPhase(dryRun, "bootstrap", bootstrapPredicate());
+  }
+  
 }

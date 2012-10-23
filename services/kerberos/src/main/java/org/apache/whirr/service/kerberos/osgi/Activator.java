@@ -43,10 +43,12 @@ public class Activator implements BundleActivator {
     functionLoader.start();
     Properties clientProps = new Properties();
     clientProps.put("name", KerberosClientHandler.ROLE);
-    clientRegistration = context.registerService(ClusterActionHandler.class.getName(), clientActionHandler, clientProps);
+    clientRegistration = context
+      .registerService(ClusterActionHandler.class.getName(), clientActionHandler, clientProps);
     Properties serverProps = new Properties();
     serverProps.put("name", KerberosServerHandler.ROLE);
-    serverRegistration = context.registerService(ClusterActionHandler.class.getName(), serverClusterActionHandler, serverProps);
+    serverRegistration = context.registerService(ClusterActionHandler.class.getName(), serverClusterActionHandler,
+      serverProps);
   }
 
   @Override
