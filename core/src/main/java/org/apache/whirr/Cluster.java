@@ -116,8 +116,8 @@ public class Cluster {
     }
 
     public synchronized void cachePublicHostNameBasedOnMetaData() {
-      LOG.debug("caching public host name as {} as per pre-launch meta data", nodeMetadata.getHostname());
-      publicHostName = nodeMetadata.getHostname();
+      LOG.debug("caching public host name as {} as per pre-launch meta data", nodeMetadata.getName());
+      publicHostName = nodeMetadata.getName();
     }
 
     public synchronized String getPublicHostName() throws IOException {
