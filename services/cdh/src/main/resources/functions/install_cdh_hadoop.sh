@@ -38,8 +38,8 @@ EOF
       cat > /etc/yum.repos.d/cloudera-$REPO.repo <<EOF
 [cloudera-$REPO]
 name=Cloudera's Distribution for Hadoop, Version $CDH_MAJOR_VERSION
-baseurl=http://$REPO_HOST/$REPO/redhat/$releasever/$basearch/cdh/$CDH_MAJOR_VERSION/
-gpgkey=http://archive.cloudera.com/$REPO/redhat/$releasever/$basearch/cdh/RPM-GPG-KEY-cloudera
+baseurl=http://$REPO_HOST/$REPO/redhat/\$releasever/\$basearch/cdh/$CDH_MAJOR_VERSION/
+gpgkey=http://archive.cloudera.com/$REPO/redhat/\$releasever/\$basearch/cdh/RPM-GPG-KEY-cloudera
 gpgcheck=0
 enabled=1
 EOF
