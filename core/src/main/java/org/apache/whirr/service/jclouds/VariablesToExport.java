@@ -111,7 +111,7 @@ class VariablesToExport implements Supplier<Map<String, String>> {
     for (Iterator<?> it = clusterSpec.getConfiguration().getKeys("whirr.env"); it.hasNext(); ) {
       String key = (String) it.next();
       String value = clusterSpec.getConfiguration().getString(key);
-      metadataMap.put(key.substring("whirr.env.".length()), value);
+      metadataMap.put(key.substring("whirr.env.".length()).toUpperCase(), value);
     }
   }
 }
