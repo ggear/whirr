@@ -37,10 +37,10 @@ EOF
       cat > /etc/yum.repos.d/cloudera-cdh4.repo <<EOF
 [cloudera-cdh4]
 name=Cloudera's Distribution for Hadoop, Version 4
-baseurl=http://$REPO_HOST/cdh4/redhat/5/x86_64/cdh/4/
-http://repos.jenkins.sf.cloudera.com/cdh4-nightly/redhat/5/x86_64/cdh/4/
-gpgkey = http://$REPO_HOST/cdh4/redhat/5/x86_64/cdh/RPM-GPG-KEY-cloudera 
-gpgcheck = 1
+baseurl=http://$REPO_HOST/cdh4/redhat/$releasever/$basearch/cdh/4/
+gpgkey=http://archive.cloudera.com/cdh4/redhat/$releasever/$basearch/cdh/RPM-GPG-KEY-cloudera
+gpgcheck=0
+enabled=1
 EOF
     else
       cat > /etc/yum.repos.d/cloudera-$REPO.repo <<EOF
