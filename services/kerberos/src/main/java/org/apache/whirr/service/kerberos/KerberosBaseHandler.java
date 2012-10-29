@@ -49,8 +49,12 @@ public abstract class KerberosBaseHandler extends ClusterActionHandlerSupport {
     try {
       kerberosServerInstance = event.getCluster().getInstanceMatching(role(KerberosServerHandler.ROLE));
     } catch (NoSuchElementException noSuchElementException) {
+      // ignore exception which a indicates client role has been configured
+      // without a cluster KDC role, but ensure the configure client script is
+      // not executed, which depends on the KDC hostname
     }
-    if (kerberosServerInstance != null)
+    if (kerberosServerInstance != null) {
       addStatement(event, call("configure_kerberos_client", "-h", kerberosServerInstance.getPublicHostName()));
+    }
   }
 }
