@@ -188,7 +188,7 @@ public class ClusterSpec {
 
     JDK_INSTALL_URL(String.class, false, "JDK install URL"),
     
-    KERBEROS_REALM(String.class, false, "Kerberos realm to use in secuirty configuration"),
+    KERBEROS_REALM(String.class, false, "Kerberos realm to use in security configuration"),
                              
     AWS_EC2_PLACEMENT_GROUP(String.class, false, "If given, use this existing EC2 placement group. (aws-ec2 specific option)");
     
