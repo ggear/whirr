@@ -19,12 +19,12 @@ function register_cloudera_repo() {
   CDH_MAJOR_VERSION=$(echo $REPO | sed -e 's/cdh\([0-9]\).*/\1/')
   CDH_VERSION=$(echo $REPO | sed -e 's/cdh\([0-9][0-9]*\)/\1/')
   if which dpkg &> /dev/null; then
-    if [ $CDH_MAJOR_VERSION = "4" ]; then
-      cat > /etc/apt/sources.list.d/cloudera-cdh4.list <<EOF
-deb http://$REPO_HOST/cdh4/ubuntu/lucid/amd64/cdh lucid-cdh4 contrib
-deb-src http://$REPO_HOST/cdh4/ubuntu/lucid/amd64/cdh lucid-cdh4 contrib
+    if [ $CDH_MAJOR_VERSION > "3" ]; then
+      cat > /etc/apt/sources.list.d/cloudera-$REPO.list <<EOF
+deb http://$REPO_HOST/$REPO/ubuntu/lucid/amd64/cdh lucid-$REPO contrib
+deb-src http://$REPO_HOST/$REPO/ubuntu/lucid/amd64/cdh lucid-$REPO contrib
 EOF
-      curl -s http://$REPO_HOST/cdh4/ubuntu/lucid/amd64/cdh/archive.key | apt-key add -
+      curl -s http://$REPO_HOST/$REPO/ubuntu/lucid/amd64/cdh/archive.key | apt-key add -
     else
       cat > /etc/apt/sources.list.d/cloudera-$REPO.list <<EOF
 deb http://$REPO_HOST/debian lucid-$REPO contrib
@@ -34,14 +34,14 @@ EOF
     fi
     retry_apt_get -y update
   elif which rpm &> /dev/null; then
-    if [ $CDH_MAJOR_VERSION = "4" ]; then
-      cat > /etc/yum.repos.d/cloudera-cdh4.repo <<EOF
-[cloudera-cdh4]
-name=Cloudera's Distribution for Hadoop, Version 4
-baseurl=http://$REPO_HOST/cdh4/redhat/5/x86_64/cdh/4/
-http://repos.jenkins.sf.cloudera.com/cdh4-nightly/redhat/5/x86_64/cdh/4/
-gpgkey = http://$REPO_HOST/cdh4/redhat/5/x86_64/cdh/RPM-GPG-KEY-cloudera 
-gpgcheck = 1
+    if [ $CDH_MAJOR_VERSION > "3" ]; then
+      cat > /etc/yum.repos.d/cloudera-$REPO.repo <<EOF
+[cloudera-$REPO]
+name=Cloudera's Distribution for Hadoop, Version $CDH_MAJOR_VERSION
+baseurl=http://$REPO_HOST/$REPO/redhat/\$releasever/\$basearch/cdh/$CDH_MAJOR_VERSION/
+gpgkey=http://archive.cloudera.com/$REPO/redhat/\$releasever/\$basearch/cdh/RPM-GPG-KEY-cloudera
+gpgcheck=0
+enabled=1
 EOF
     else
       cat > /etc/yum.repos.d/cloudera-$REPO.repo <<EOF
