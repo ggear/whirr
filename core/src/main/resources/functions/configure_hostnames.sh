@@ -38,4 +38,24 @@ function configure_hostnames() {
       sleep 2
       hostname
   fi
+  
+  # HACK: hijack this script to execute host configuration steps
+  
+  # kill the firewalls until WHIRR-276 is resolved
+  service iptables stop
+  service ip6tables stop
+  chkconfig --level 0123456 iptables off
+  chkconfig --level 0123456 ip6tables off
+  
+  # install and enable ntpd
+  yum -y install ntp
+  ntpdate pool.ntp.org
+  service ntpd start
+  chkconfig ntpd on
+  rm -rf /etc/localtime
+  ln -s /usr/share/zoneinfo/Europe/London /etc/localtime
+  date
+    
+  # HACK: end
+  
 }
