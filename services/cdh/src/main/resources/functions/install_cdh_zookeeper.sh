@@ -19,7 +19,7 @@ function register_cloudera_repo() {
   CDH_MAJOR_VERSION=$(echo $REPO | sed -e 's/cdh\([0-9]\).*/\1/')
   CDH_VERSION=$(echo $REPO | sed -e 's/cdh\([0-9][0-9]*\)/\1/')
   if which dpkg &> /dev/null; then
-    if [ $CDH_MAJOR_VERSION > "3" ]; then
+    if [ $CDH_MAJOR_VERSION -gt 3 ]; then
       cat > /etc/apt/sources.list.d/cloudera-$REPO.list <<EOF
 deb http://$REPO_HOST/$REPO/ubuntu/lucid/amd64/cdh lucid-$REPO contrib
 deb-src http://$REPO_HOST/$REPO/ubuntu/lucid/amd64/cdh lucid-$REPO contrib
@@ -34,21 +34,20 @@ EOF
     fi
     retry_apt_get -y update
   elif which rpm &> /dev/null; then
-    if [ $CDH_MAJOR_VERSION > "3" ]; then
+    if [ $CDH_MAJOR_VERSION -gt 3 ]; then
       cat > /etc/yum.repos.d/cloudera-$REPO.repo <<EOF
 [cloudera-$REPO]
 name=Cloudera's Distribution for Hadoop, Version $CDH_MAJOR_VERSION
 baseurl=http://$REPO_HOST/$REPO/redhat/\$releasever/\$basearch/cdh/$CDH_MAJOR_VERSION/
 gpgkey=http://archive.cloudera.com/$REPO/redhat/\$releasever/\$basearch/cdh/RPM-GPG-KEY-cloudera
-gpgcheck=0
-enabled=1
+gpgcheck=1
 EOF
     else
       cat > /etc/yum.repos.d/cloudera-$REPO.repo <<EOF
 [cloudera-$REPO]
 name=Cloudera's Distribution for Hadoop, Version $CDH_VERSION
-mirrorlist=http://$REPO_HOST/redhat/cdh/$CDH_VERSION/mirrors
-gpgkey = http://$REPO_HOST/redhat/cdh/RPM-GPG-KEY-cloudera
+mirrorlist=http://$REPO_HOST/redhat/\$releasever/\$basearch/cdh/$CDH_VERSION/mirrors
+gpgkey = http://$REPO_HOST/redhat/\$releasever/\$basearch/cdh/RPM-GPG-KEY-cloudera
 gpgcheck = 0
 EOF
     fi
