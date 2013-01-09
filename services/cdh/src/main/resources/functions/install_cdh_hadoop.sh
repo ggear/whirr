@@ -35,22 +35,22 @@ EOF
     retry_apt_get -y update
   elif which rpm &> /dev/null; then
     if [ $CDH_MAJOR_VERSION -gt 3 ]; then
+      cat > /etc/yum.repos.d/cloudera-$REPO.repo <<EOF
+[cloudera-$REPO]
+name=Cloudera's Distribution for Hadoop, Version $CDH_MAJOR_VERSION
+baseurl=http://$REPO_HOST/$REPO/redhat/\$releasever/\$basearch/cdh/$CDH_MAJOR_VERSION/
+gpgkey=http://archive.cloudera.com/$REPO/redhat/\$releasever/\$basearch/cdh/RPM-GPG-KEY-cloudera
+gpgcheck=1
+EOF
+    else
       if [ $(rpm -q --qf "%{VERSION}" $(rpm -q --whatprovides redhat-release)) -gt 5 ]; then
         OS_VERSION_ARCH="\$releasever/\$basearch/";
       fi	
       cat > /etc/yum.repos.d/cloudera-$REPO.repo <<EOF
 [cloudera-$REPO]
-name=Cloudera's Distribution for Hadoop, Version $CDH_MAJOR_VERSION
-baseurl=http://$REPO_HOST/$REPO/redhat/$OS_VERSION_ARCH/cdh/$CDH_MAJOR_VERSION/
-gpgkey=http://archive.cloudera.com/$REPO/redhat/$OS_VERSION_ARCH/cdh/RPM-GPG-KEY-cloudera
-gpgcheck=1
-EOF
-    else
-      cat > /etc/yum.repos.d/cloudera-$REPO.repo <<EOF
-[cloudera-$REPO]
 name=Cloudera's Distribution for Hadoop, Version $CDH_VERSION
-mirrorlist=http://$REPO_HOST/redhat/\$releasever/\$basearch/cdh/$CDH_VERSION/mirrors
-gpgkey = http://$REPO_HOST/redhat/\$releasever/\$basearch/cdh/RPM-GPG-KEY-cloudera
+mirrorlist=http://$REPO_HOST/redhat/$OS_VERSION_ARCH/cdh/$CDH_VERSION/mirrors
+gpgkey = http://$REPO_HOST/redhat/$OS_VERSION_ARCH/cdh/RPM-GPG-KEY-cloudera
 gpgcheck = 0
 EOF
     fi
