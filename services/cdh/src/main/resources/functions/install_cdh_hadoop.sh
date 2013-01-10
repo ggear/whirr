@@ -19,16 +19,19 @@ function register_cloudera_repo() {
   CDH_MAJOR_VERSION=$(echo $REPO | sed -e 's/cdh\([0-9]\).*/\1/')
   CDH_VERSION=$(echo $REPO | sed -e 's/cdh\([0-9][0-9]*\)/\1/')
   if which dpkg &> /dev/null; then
+	retry_apt-get -y install lsb-release
+	OS_CODENAME=$(lsb_release -sc)
+	OS_DISTID=$(lsb_release -si | tr '[A-Z]' '[a-z]')
     if [ $CDH_MAJOR_VERSION -gt 3 ]; then
       cat > /etc/apt/sources.list.d/cloudera-$REPO.list <<EOF
-deb http://$REPO_HOST/$REPO/ubuntu/lucid/amd64/cdh lucid-$REPO contrib
-deb-src http://$REPO_HOST/$REPO/ubuntu/lucid/amd64/cdh lucid-$REPO contrib
+deb http://$REPO_HOST/$REPO/$OS_DISTID/$OS_CODENAME/amd64/cdh $OS_CODENAME-$REPO contrib
+deb-src http://$REPO_HOST/$REPO/$OS_DISTID/$OS_CODENAME/amd64/cdh $OS_CODENAME-$REPO contrib
 EOF
-      curl -s http://$REPO_HOST/$REPO/ubuntu/lucid/amd64/cdh/archive.key | apt-key add -
+      curl -s http://$REPO_HOST/$REPO/$OS_DISTID/$OS_CODENAME/amd64/cdh/archive.key | apt-key add -
     else
       cat > /etc/apt/sources.list.d/cloudera-$REPO.list <<EOF
-deb http://$REPO_HOST/debian lucid-$REPO contrib
-deb-src http://$REPO_HOST/debian lucid-$REPO contrib
+deb http://$REPO_HOST/debian $OS_CODENAME-$REPO contrib
+deb-src http://$REPO_HOST/debian $OS_CODENAME-$REPO contrib
 EOF
       curl -s http://$REPO_HOST/debian/archive.key | apt-key add -
     fi
