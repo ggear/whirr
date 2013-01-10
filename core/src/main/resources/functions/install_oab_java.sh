@@ -19,6 +19,7 @@ function install_oab_java_deb() {
   # TODO: check that it is not already enabled
   sed -i -e 's/universe$/universe multiverse/' /etc/apt/sources.list
   
+  apt-get -y install lsb-release pciutils
   DISTRO=`lsb_release -s -c`
   
   apt-get update
