@@ -19,14 +19,15 @@ function register_cloudera_repo() {
   CDH_MAJOR_VERSION=$(echo $REPO | sed -e 's/cdh\([0-9]\).*/\1/')
   CDH_VERSION=$(echo $REPO | sed -e 's/cdh\([0-9][0-9]*\)/\1/')
   if which dpkg &> /dev/null; then
+	retry_apt-get -y install lsb-release
 	OS_CODENAME=$(lsb_release -sc)
 	OS_DISTID=$(lsb_release -si | tr '[A-Z]' '[a-z]')
     if [ $CDH_MAJOR_VERSION -gt 3 ]; then
       cat > /etc/apt/sources.list.d/cloudera-$REPO.list <<EOF
-deb http://$REPO_HOST/$REPO/$OS_DISTID/$OS_CODENAME/amd64/cdh $OS_CODENAME-$REPO contrib
-deb-src http://$REPO_HOST/$REPO/$OS_DISTID/$OS_CODENAME/amd64/cdh $OS_CODENAME-$REPO contrib
+deb http://$REPO_HOST/cdh$CDH_MAJOR_VERSION/$OS_DISTID/$OS_CODENAME/amd64/cdh $OS_CODENAME-$REPO contrib
+deb-src http://$REPO_HOST/cdh$CDH_MAJOR_VERSION/$OS_DISTID/$OS_CODENAME/amd64/cdh $OS_CODENAME-$REPO contrib
 EOF
-      curl -s http://$REPO_HOST/$REPO/$OS_DISTID/$OS_CODENAME/amd64/cdh/archive.key | apt-key add -
+      curl -s http://$REPO_HOST/cdh$CDH_MAJOR_VERSION/$OS_DISTID/$OS_CODENAME/amd64/cdh/archive.key | apt-key add -
     else
       cat > /etc/apt/sources.list.d/cloudera-$REPO.list <<EOF
 deb http://$REPO_HOST/debian $OS_CODENAME-$REPO contrib
@@ -39,9 +40,9 @@ EOF
     if [ $CDH_MAJOR_VERSION -gt 3 ]; then
       cat > /etc/yum.repos.d/cloudera-$REPO.repo <<EOF
 [cloudera-$REPO]
-name=Cloudera's Distribution for Hadoop, Version $CDH_MAJOR_VERSION
-baseurl=http://$REPO_HOST/$REPO/redhat/\$releasever/\$basearch/cdh/$CDH_MAJOR_VERSION/
-gpgkey=http://archive.cloudera.com/$REPO/redhat/\$releasever/\$basearch/cdh/RPM-GPG-KEY-cloudera
+name=Cloudera's Distribution for Hadoop, Version $CDH_VERSION
+baseurl=http://$REPO_HOST/cdh$CDH_MAJOR_VERSION/redhat/\$releasever/\$basearch/cdh/$CDH_VERSION/
+gpgkey=http://$REPO_HOST/cdh$CDH_MAJOR_VERSION/redhat/\$releasever/\$basearch/cdh/RPM-GPG-KEY-cloudera
 gpgcheck=1
 EOF
     else
