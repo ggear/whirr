@@ -54,8 +54,8 @@ EOF
 [cloudera-$REPO]
 name=Cloudera's Distribution for Hadoop, Version $CDH_VERSION
 mirrorlist=http://$REPO_HOST/redhat/$OS_VERSION_ARCH/cdh/$CDH_VERSION/mirrors
-gpgkey = http://$REPO_HOST/redhat/$OS_VERSION_ARCH/cdh/RPM-GPG-KEY-cloudera
-gpgcheck = 0
+gpgkey=http://$REPO_HOST/redhat/$OS_VERSION_ARCH/cdh/RPM-GPG-KEY-cloudera
+gpgcheck=1
 EOF
       rpm --import http://$REPO_HOST/redhat/$OS_VERSION_ARCH/cdh/RPM-GPG-KEY-cloudera
     fi
