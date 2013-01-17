@@ -45,6 +45,7 @@ baseurl=http://$REPO_HOST/cdh$CDH_MAJOR_VERSION/redhat/\$releasever/\$basearch/c
 gpgkey=http://$REPO_HOST/cdh$CDH_MAJOR_VERSION/redhat/\$releasever/\$basearch/cdh/RPM-GPG-KEY-cloudera
 gpgcheck=1
 EOF
+      rpm --import http://$REPO_HOST/cdh$CDH_MAJOR_VERSION/redhat/$(rpm -q --qf "%{VERSION}" $(rpm -q --whatprovides redhat-release))/$(rpm -q --qf "%{ARCH}" $(rpm -q --whatprovides redhat-release))/cdh/RPM-GPG-KEY-cloudera
     else
       if [ $(rpm -q --qf "%{VERSION}" $(rpm -q --whatprovides redhat-release)) -gt 5 ]; then
         OS_VERSION_ARCH="\$releasever/\$basearch/";
@@ -53,9 +54,10 @@ EOF
 [cloudera-$REPO]
 name=Cloudera's Distribution for Hadoop, Version $CDH_VERSION
 mirrorlist=http://$REPO_HOST/redhat/$OS_VERSION_ARCH/cdh/$CDH_VERSION/mirrors
-gpgkey = http://$REPO_HOST/redhat/$OS_VERSION_ARCH/cdh/RPM-GPG-KEY-cloudera
-gpgcheck = 0
+gpgkey=http://$REPO_HOST/redhat/$OS_VERSION_ARCH/cdh/RPM-GPG-KEY-cloudera
+gpgcheck=1
 EOF
+      rpm --import http://$REPO_HOST/redhat/$OS_VERSION_ARCH/cdh/RPM-GPG-KEY-cloudera
     fi
     retry_yum update -y retry_yum
   fi
@@ -94,11 +96,11 @@ function install_cdh_hadoop() {
     retry_apt_get update
     retry_apt_get -y install $HADOOP_PACKAGE
     cp -r /etc/$HADOOP/conf.empty $HADOOP_CONF_DIR
-    update-alternatives --install /etc/$HADOOP/conf $HADOOP-conf $HADOOP_CONF_DIR 90
+    update-alternatives --install /etc/$HADOOP/conf $HADOOP-conf $HADOOP_CONF_DIR 80
   elif which rpm &> /dev/null; then
     retry_yum install -y $HADOOP_PACKAGE
     cp -r /etc/$HADOOP/conf.empty $HADOOP_CONF_DIR
-    alternatives --install /etc/$HADOOP/conf $HADOOP-conf $HADOOP_CONF_DIR 90
+    alternatives --install /etc/$HADOOP/conf $HADOOP-conf $HADOOP_CONF_DIR 80
   fi
   
   INSTALL_HADOOP_DONE=1
