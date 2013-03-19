@@ -1,6 +1,46 @@
 Apache Whirr Change Log
 
-Release 0.8.1 (unreleased changes)
+Release 0.8.2 (unreleased changes)
+
+  IMPROVEMENTS
+
+    WHIRR-681. Enhance puppet service with an ability to export
+    cluster topology to the puppet code. (Roman Shaposhnik via abayer)
+  
+    WHIRR-661. Upgrade to Hadoop 1.0.3. (Steve Loughran via abayer)
+  
+    WHIRR-634. Update private IP host file entry when required by
+    AUTO_HOSTNAME_SUFFIX. (Graham Gear via abayer)
+  
+    WHIRR-660. Provide useful message if whirr.instance-templates is
+    empty or not provided. (abayer)
+  
+    WHIRR-672. Allow eager caching of instance hostname based on pre-provision
+    instance metadata. (Graham Gear via tomwhite)
+
+    WHIRR-675. Convert all whirr.env.* environment variable labels to upper
+    case. (Graham Gear via tomwhite)
+
+    WHIRR-671. Create Kerberos Service. (Graham Gear via tomwhite)
+
+    WHIRR-679. Switch to HBase 0.94.2. (abayer via tomwhite)
+
+    WHIRR-680. Add python scripts to aid ssh/scp in to VMs.
+    (Steve Loughran via tomwhite)
+    
+    WHIRR-691. Java install to support Debian. (Graham Gear via tomwhite)
+    
+    WHIRR-673. Upgrade CDH Repos for RHEL/CentOS 6. (Graham Gear via tomwhite)
+
+  BUG FIXES
+
+    WHIRR-699. Fix indentation and formatting on "Getting Started" page.
+    (Mark Grover via tomwhite)
+
+    WHIRR-696. Whirr script for Hadoop MRv2 YARN installs that supports
+    Hadoop-2.0.x and Hadoop 3.x (trunk) branches. (Eli Reisman via tomwhite)
+
+Release 0.8.1 - 2012-10-19
 
   NEW FEATURES
 
