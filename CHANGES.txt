@@ -4,6 +4,24 @@ Release 0.8.2 (unreleased changes)
 
   IMPROVEMENTS
 
+    WHIRR-708. Upgrade to jclouds 1.5.8. (abayer)
+      
+    WHIRR-705. Provide better integration between parameterized
+    classes and Hiera. (Roman Shaposhnik via abayer)
+    
+    WHIRR-694. Install puppet from puppetlabs repo instead of ruby
+    gem. (Roman Shaposhnik via abayer)
+    
+    WHIRR-709. Bump Hadoop to latest available version (1.0.4) at
+    osuosl. (abayer)
+    
+    WHIRR-546. Add destroy instructions to stdout for all create
+    actions. (abayer)
+    
+    WHIRR-712. prepare_all_disks.sh should cover xvdX as well as sdX. (abayer)
+    
+    WHIRR-711. Add security group support for OpenStack. (abayer)
+
     WHIRR-681. Enhance puppet service with an ability to export
     cluster topology to the puppet code. (Roman Shaposhnik via abayer)
   
@@ -34,6 +52,8 @@ Release 0.8.2 (unreleased changes)
 
   BUG FIXES
 
+    WHIRR-706. Add invalidate method to ComputeCache. (abayer)
+    
     WHIRR-699. Fix indentation and formatting on "Getting Started" page.
     (Mark Grover via tomwhite)
 
