@@ -4,6 +4,11 @@ Release 0.8.2 (unreleased changes)
 
   IMPROVEMENTS
 
+    WHIRR-717 Use the context name in the dynamic compute cache. (iocanel)
+
+    WHIRR-713. Enable programmatic use of BYON via
+    CacheNodeStoreModule. (abayer)
+    
     WHIRR-708. Upgrade to jclouds 1.5.8. (abayer)
       
     WHIRR-705. Provide better integration between parameterized
