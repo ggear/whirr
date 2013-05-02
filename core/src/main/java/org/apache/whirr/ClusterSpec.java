@@ -198,7 +198,7 @@ public class ClusterSpec {
                              
     AWS_EC2_PLACEMENT_GROUP(String.class, false, "If given, use this existing EC2 placement group. (aws-ec2 specific option)"),
     
-    QUIET(Boolean.class, false,  "Be less verbose.");
+    QUIET(Boolean.class, false,  "Adjust user level, console logging verbosity.");
     
     private Class<?> type;
     private boolean multipleArguments;
